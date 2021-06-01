@@ -51,6 +51,12 @@ public class Persona {
     public int getID() {
         return ID;
     }
+
+    @Override
+    public String toString() {
+        return nombre+" "+edad+" "+correo+" "+ID;
+    }
+    
     
     
 }
