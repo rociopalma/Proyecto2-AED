@@ -5,10 +5,33 @@
  */
 package manipulacionnodos;
 
+import org.neo4j.driver.Session;
+import static org.neo4j.driver.Values.parameters;
+
 /**
  *
  * @author Rocío
  */
 public class RelacionNecesita {
+    Conexiones cn = new Conexiones();
     
+    
+   /* public void crearRelacionn(Producto claseProducto, Tiene claseTiene) {
+        
+        try (Session session = cn.conectar()) {
+           // if (validaNodo(nameNodo)) {
+
+                 session.run("MATCH (p:Persona{nombre: $nombre}) MATCH (t:TipoPiel{nombre: $nombreT}) CREATE (p)-[:TIENE]->(t)",
+                        parameters("nombre", clasePersona.getNombre(), "nombreT", claseTiene.getTipoPiel()));
+               
+                    System.out.println("Relación creada correctamente");
+                
+            //}
+
+        } catch (Exception e) {
+            System.out.println("Error Conexion Neo4j: " + e.getMessage());
+        } finally {
+            cn.desconectar();
+        }
+    }//fin de metodo*/
 }

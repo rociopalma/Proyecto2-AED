@@ -28,8 +28,11 @@ public class PersonaControler {
             Result result = session.run("CREATE (nodo: Persona {nombre: $name, edad: $edad, correo: $correo}) RETURN nodo",
                     parameters("name", clasePersona.getNombre(), "edad", clasePersona.getEdad(),
                             "correo", clasePersona.getCorreo()));
-            if (result.list().size() > 0) {
-                System.out.println("Nodo creado correctamente");
+            if (result.hasNext()) {
+                Record record = result.single();
+                Node node = record.get("nodo").asNode();
+                clasePersona.setID((int) node.id());
+                System.out.println("Nodo creado correctamente con el ID "+clasePersona.getID());
             } else {
                 System.out.println("No se pudo crear el nodo, favor de verificar.");
             }
@@ -40,8 +43,45 @@ public class PersonaControler {
         } finally {
             cn.desconectar();
         }
+        
     }//fin crear nodo
 
+    public arbolPersona consultaArbol() {
+        arbolPersona arbol = new arbolPersona();
+        try ( Session session = cn.conectar()) {
+            // if (validaNodo(nameNodo)) {
+
+            Result result = session.run("MATCH (n:Persona) RETURN n");
+
+            for (Record record : result.list()) {
+                Persona persona = new Persona();
+                Node node = record.get("n").asNode();
+                persona.setID((int) node.id());
+                persona.setNombre(node.get("nombre").asString());
+                persona.setEdad(node.get("edad").asInt());
+                persona.setCorreo(node.get("correo").asString());
+                arbol.insertar(persona);
+            }//fin de for
+
+            //}
+        } catch (Exception e) {
+            System.out.println("Error Conexion Neo4j: " + e.getMessage());
+        } finally {
+            cn.desconectar();
+        }
+        return arbol;
+
+    }//fin consulta
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public ArrayList<Persona> consulta() {
         ArrayList<Persona> listaPersonas = new ArrayList<>();
         try ( Session session = cn.conectar()) {
@@ -72,19 +112,18 @@ public class PersonaControler {
     public Persona consultarID(int ID) {
         Persona claseP = new Persona();
 
-        try (Session session = cn.conectar()){
-            // if (validaNodo(nameNodo)) {
-            
-            Result result = session.run("MATCH (n:Persona) WHERE ID(n)=$ID RETURN n", parameters("ID", ID));
-            //if (!result.list().isEmpty()){
-            Record record = result.single();
-            Node node = record.get("n").asNode();
-            claseP.setID((int) node.id());
-            claseP.setNombre(node.get("nombre").asString());
-            claseP.setEdad(node.get("edad").asInt());
-            claseP.setCorreo(node.get("correo").asString());
+        try ( Session session = cn.conectar()) {
 
-            //}
+            Result result = session.run("MATCH (n:Persona) WHERE ID(n)=$ID RETURN n", parameters("ID", ID));
+            if (result.hasNext()) {
+                Record record = result.single();
+                Node node = record.get("n").asNode();
+                claseP.setID((int) node.id());
+                claseP.setNombre(node.get("nombre").asString());
+                claseP.setEdad(node.get("edad").asInt());
+                claseP.setCorreo(node.get("correo").asString());
+            }
+
         } catch (Exception e) {
             System.out.println("Error Conexion Neo4j: " + e.getMessage());
         } finally {
@@ -93,5 +132,19 @@ public class PersonaControler {
         return claseP;
 
     }//fin de consultar ID
+
+    public void EliminarNodo(Persona clasePersona) {
+
+        try ( Session session = cn.conectar()) {
+
+            session.run("MATCH (n:Persona{nombre: $nombre}) DETACH DELETE n",
+                    parameters("nombre", clasePersona.getNombre()));
+
+        } catch (Exception e) {
+            System.out.println("Error Conexion Neo4j: " + e.getMessage());
+        } finally {
+            cn.desconectar();
+        }
+    }//fin crear nodo
 
 }

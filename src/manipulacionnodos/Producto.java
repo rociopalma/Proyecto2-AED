@@ -11,4 +11,41 @@ package manipulacionnodos;
  */
 public class Producto {
     
+    private String nombre;
+    private int ID;
+    private int valor;
+    
+    public Producto(){
+        
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
+
+    public int getValor() {
+        return valor;
+    }
+    
+    
+    
+    public String toString() {
+        return nombre+", ID: "+ID+", costo: "+valor;
+    }
 }

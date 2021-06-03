@@ -12,9 +12,9 @@ package manipulacionnodos;
 public class Persona {
     
     private String nombre;
-    private int edad;
+    private int edad=0;
     private String correo;
-    private int ID;
+    private int ID =0;
     
     public Persona(){
         
